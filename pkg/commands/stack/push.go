@@ -8,8 +8,6 @@ import (
 	"strconv"
 )
 
-const max15bitValue = 36767
-
 type Push struct {
 	segment string
 	index   string

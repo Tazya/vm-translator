@@ -5,8 +5,11 @@ import (
 	"github.com/tazya/vm-translator/pkg/commands"
 )
 
+const max15bitValue = 36767
+
 var stackCommands = map[string]func(segment, index string) (commands.Command, error){
 	"push": NewPush,
+	"pop":  NewPop,
 }
 
 func IsStackCommand(commandName string) bool {
