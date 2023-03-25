@@ -3,9 +3,9 @@ package stack
 import (
 	"errors"
 	"fmt"
+	"github.com/tazya/vm-translator/pkg/commands"
 	"github.com/tazya/vm-translator/pkg/memory_segments"
 	"strconv"
-	"strings"
 )
 
 const max15bitValue = 36767
@@ -15,28 +15,16 @@ type Push struct {
 	index   string
 }
 
-func NewPush(command string) (*Push, error) {
-	_, arg, isFound := strings.Cut(command, "push")
-
-	if !isFound {
-		return nil, errors.New("logic error. Command must be 'push'")
-	}
-
-	fields := strings.Fields(arg)
-
-	if len(fields) != 2 {
-		return nil, errors.New("syntax error. Push command must have 2 operands")
-	}
-
-	pushCommand := &Push{
-		segment: fields[0],
-		index:   fields[1],
-	}
-
-	value, err := strconv.Atoi(pushCommand.index)
+func NewPush(segment, index string) (commands.Command, error) {
+	value, err := strconv.Atoi(index)
 
 	if err != nil || value > max15bitValue {
 		return nil, errors.New(fmt.Sprintf("value must be integer, max number: %d", max15bitValue))
+	}
+
+	pushCommand := &Push{
+		segment: segment,
+		index:   index,
 	}
 
 	return pushCommand, nil

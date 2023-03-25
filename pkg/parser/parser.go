@@ -16,12 +16,15 @@ func ParseLine(l string) (commands.Command, error) {
 		return nil, nil
 	}
 
-	if isPush(trimmedLine) {
-		return stack.NewPush(trimmedLine)
+	fields := strings.Fields(l)
+	commandName := fields[0]
+
+	if stack.IsStackCommand(commandName) {
+		return stack.GetCommand(fields)
 	}
 
-	if isAdd(trimmedLine) {
-		return &arithmetic.Add{}, nil
+	if arithmetic.IsArithmeticCommand(commandName) {
+		return arithmetic.GetCommand(fields)
 	}
 
 	return nil, errors.New(fmt.Sprintf("Unknown command '%s'", l))
@@ -29,12 +32,4 @@ func ParseLine(l string) (commands.Command, error) {
 
 func isComment(s string) bool {
 	return strings.HasPrefix(s, "//")
-}
-
-func isPush(s string) bool {
-	return strings.HasPrefix(s, "push")
-}
-
-func isAdd(s string) bool {
-	return strings.HasPrefix(s, "add")
 }

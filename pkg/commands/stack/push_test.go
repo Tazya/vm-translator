@@ -2,6 +2,7 @@ package stack
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -20,17 +21,15 @@ func TestNewPush(t *testing.T) {
 				index:   "2",
 			},
 		},
-		{
-			name:    "Incorrect arguments",
-			command: "push unknown",
-			want:    nil,
-			wantErr: true,
-		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewPush(tt.command)
+			fields := strings.Fields(tt.command)
+			segment := fields[1]
+			index := fields[2]
+
+			got, err := NewPush(segment, index)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewPush() error = %v, wantErr %v", err, tt.wantErr)
