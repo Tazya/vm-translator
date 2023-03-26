@@ -12,7 +12,15 @@ var segmentLabels = map[string]string{
 	"that":     "@THAT",
 }
 
-func GetSegmentLabel(segmentName string) (string, error) {
+func GetSegmentLabel(segmentName, value string) (string, error) {
+	if segmentName == "pointer" {
+		if value == "0" {
+			segmentName = "this"
+		} else {
+			segmentName = "that"
+		}
+	}
+
 	label, isExist := segmentLabels[segmentName]
 
 	if !isExist {

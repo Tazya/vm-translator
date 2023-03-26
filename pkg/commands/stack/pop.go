@@ -47,7 +47,7 @@ func (p *Pop) GetASMInstructions() ([]string, error) {
 		return p.getTempInstructions(), nil
 	}
 
-	segmentLabel, err := memory_segments.GetSegmentLabel(p.segment)
+	segmentLabel, err := memory_segments.GetSegmentLabel(p.segment, p.index)
 
 	if err != nil {
 		return []string{}, err
