@@ -50,7 +50,7 @@ func main() {
 	for inputFileScanner.Scan() {
 		codeLine++
 
-		command, err := parser.ParseLine(inputFileScanner.Text())
+		command, err := parser.ParseLine(inputFileScanner.Text(), fileNameWithoutExt)
 
 		if err != nil {
 			fmt.Println(fmt.Sprintf("Parsing error. line:%d", codeLine), err.Error())

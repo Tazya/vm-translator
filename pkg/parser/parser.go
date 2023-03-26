@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func ParseLine(l string) (commands.Command, error) {
+func ParseLine(l, classname string) (commands.Command, error) {
 	trimmedLine := strings.Trim(l, " ")
 
 	if isComment(trimmedLine) || trimmedLine == "" {
@@ -20,7 +20,7 @@ func ParseLine(l string) (commands.Command, error) {
 	commandName := fields[0]
 
 	if stack.IsStackCommand(commandName) {
-		return stack.GetCommand(fields)
+		return stack.GetCommand(fields, classname)
 	}
 
 	if arithmetic.IsArithmeticCommand(commandName) {

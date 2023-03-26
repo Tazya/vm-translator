@@ -9,20 +9,26 @@ import (
 )
 
 type Pop struct {
-	segment string
-	index   string
+	segment   string
+	index     string
+	classname string
 }
 
-func NewPop(segment, index string) (commands.Command, error) {
+func NewPop(segment, index, classname string) (commands.Command, error) {
 	value, err := strconv.Atoi(index)
 
 	if err != nil || value > max15bitValue {
 		return nil, errors.New(fmt.Sprintf("value must be integer, max number: %d", max15bitValue))
 	}
 
+	if segment == "static" && value > staticVariablesLimit {
+		return nil, errors.New(fmt.Sprintf("reach static varibales limit: %d", staticVariablesLimit))
+	}
+
 	command := &Pop{
-		segment: segment,
-		index:   index,
+		segment:   segment,
+		index:     index,
+		classname: classname,
 	}
 
 	return command, nil
@@ -31,6 +37,10 @@ func NewPop(segment, index string) (commands.Command, error) {
 func (p *Pop) GetASMInstructions() ([]string, error) {
 	if p.segment == "constant" {
 		return []string{}, errors.New("syntax error. can not write to constant")
+	}
+
+	if p.segment == "static" {
+		return p.getStaticInstructions(), nil
 	}
 
 	segmentLabel, err := memory_segments.GetSegmentLabel(p.segment)
@@ -55,4 +65,16 @@ func (p *Pop) GetASMInstructions() ([]string, error) {
 		"A=M",
 		"M=D",
 	}, nil
+}
+
+func (p *Pop) getStaticInstructions() []string {
+	return []string{
+		fmt.Sprintf("// pop static %s", p.index),
+		fmt.Sprintf("@%s.%s", p.classname, p.index),
+		"D=M",
+		"@SP", // @SP--
+		"M=M-1",
+		"A=M",
+		"M=D",
+	}
 }

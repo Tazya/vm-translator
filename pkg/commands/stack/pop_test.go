@@ -8,10 +8,11 @@ import (
 
 func TestNewPop(t *testing.T) {
 	tests := []struct {
-		name    string
-		command string
-		want    *Pop
-		wantErr bool
+		name      string
+		command   string
+		classname string
+		want      *Pop
+		wantErr   bool
 	}{
 		{
 			name:    "Pop to constant memory segment",
@@ -19,6 +20,16 @@ func TestNewPop(t *testing.T) {
 			want: &Pop{
 				segment: "constant",
 				index:   "2",
+			},
+		},
+		{
+			name:      "Pop to static memory segment",
+			command:   "pop static 1",
+			classname: "Mouse",
+			want: &Pop{
+				segment:   "static",
+				index:     "1",
+				classname: "Mouse",
 			},
 		},
 		{
@@ -35,7 +46,7 @@ func TestNewPop(t *testing.T) {
 			segment := fields[1]
 			index := fields[2]
 
-			got, err := NewPop(segment, index)
+			got, err := NewPop(segment, index, tt.classname)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewPop() error = %v, wantErr %v", err, tt.wantErr)
@@ -60,10 +71,11 @@ func TestPop_GetASMInstructions(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		fields  fields
-		want    []string
-		wantErr bool
+		name      string
+		fields    fields
+		classname string
+		want      []string
+		wantErr   bool
 	}{
 		{
 			name: "Pop to local memory segment",
@@ -112,6 +124,23 @@ func TestPop_GetASMInstructions(t *testing.T) {
 			},
 		},
 		{
+			name: "Pop to static memory segment",
+			fields: fields{
+				segment: "static",
+				index:   "1",
+			},
+			classname: "Bird",
+			want: []string{
+				"// pop static 1",
+				"@Bird.1",
+				"D=M",
+				"@SP", // @SP--
+				"M=M-1",
+				"A=M",
+				"M=D",
+			},
+		},
+		{
 			name: "Pop to incorrect memory segment",
 			fields: fields{
 				segment: "constant",
@@ -125,8 +154,9 @@ func TestPop_GetASMInstructions(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Pop{
-				segment: tt.fields.segment,
-				index:   tt.fields.index,
+				segment:   tt.fields.segment,
+				index:     tt.fields.index,
+				classname: tt.classname,
 			}
 			got, err := p.GetASMInstructions()
 			if (err != nil) != tt.wantErr {
