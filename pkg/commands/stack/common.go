@@ -8,6 +8,8 @@ import (
 const (
 	max15bitValue        = 36767
 	staticVariablesLimit = 249 // 16-255 memory registers
+	tempIndexLimit       = 7
+	tempBaseAddress      = 5
 )
 
 var stackCommands = map[string]func(segment, index, classname string) (commands.Command, error){

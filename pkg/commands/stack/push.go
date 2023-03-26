@@ -25,6 +25,10 @@ func NewPush(segment, index, classname string) (commands.Command, error) {
 		return nil, errors.New(fmt.Sprintf("reach static varibales limit: %d", staticVariablesLimit))
 	}
 
+	if segment == "temp" && value > tempIndexLimit {
+		return nil, errors.New(fmt.Sprintf("reach temp varibales limit: %d", tempIndexLimit))
+	}
+
 	pushCommand := &Push{
 		segment:   segment,
 		index:     index,
@@ -41,6 +45,10 @@ func (p *Push) GetASMInstructions() ([]string, error) {
 
 	if p.segment == "static" {
 		return p.getStaticInstructions(), nil
+	}
+
+	if p.segment == "temp" {
+		return p.getTempInstructions(), nil
 	}
 
 	segmentLabel, err := memory_segments.GetSegmentLabel(p.segment)
@@ -81,6 +89,20 @@ func (p *Push) getStaticInstructions() []string {
 	return []string{
 		fmt.Sprintf("// push static %s", p.index),
 		fmt.Sprintf("@%s.%s", p.classname, p.index),
+		"D=M",
+		"@SP",
+		"A=M",
+		"M=D",
+		"@SP",
+		"M=M+1",
+	}
+}
+
+func (p *Push) getTempInstructions() []string {
+	intIndex, _ := strconv.Atoi(p.index)
+	return []string{
+		fmt.Sprintf("// push temp %s", p.index),
+		fmt.Sprintf("@%d", tempBaseAddress+intIndex),
 		"D=M",
 		"@SP",
 		"A=M",

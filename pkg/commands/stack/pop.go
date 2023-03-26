@@ -43,12 +43,17 @@ func (p *Pop) GetASMInstructions() ([]string, error) {
 		return p.getStaticInstructions(), nil
 	}
 
+	if p.segment == "temp" {
+		return p.getTempInstructions(), nil
+	}
+
 	segmentLabel, err := memory_segments.GetSegmentLabel(p.segment)
 
 	if err != nil {
 		return []string{}, err
 	}
 
+	// TODO @5 can collide with pop temp command. To fix we need to find a safety memory address to hold pointer
 	return []string{
 		fmt.Sprintf("// pop %s %s", p.segment, p.index),
 		segmentLabel, // temp = segment + index
@@ -75,6 +80,20 @@ func (p *Pop) getStaticInstructions() []string {
 		"@SP", // @SP--
 		"M=M-1",
 		"A=M",
+		"M=D",
+	}
+}
+
+func (p *Pop) getTempInstructions() []string {
+	intIndex, _ := strconv.Atoi(p.index)
+
+	return []string{
+		fmt.Sprintf("// pop temp %s", p.index),
+		"@SP", // @SP--
+		"M=M-1",
+		"A=M",
+		"D=M",
+		fmt.Sprintf("@%d", tempBaseAddress+intIndex),
 		"M=D",
 	}
 }
