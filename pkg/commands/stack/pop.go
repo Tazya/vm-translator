@@ -25,6 +25,10 @@ func NewPop(segment, index, classname string) (commands.Command, error) {
 		return nil, errors.New(fmt.Sprintf("reach static varibales limit: %d", staticVariablesLimit))
 	}
 
+	if segment == "temp" && value > tempMaxIndex {
+		return nil, errors.New(fmt.Sprintf("reach temp varibales limit: %d", tempMaxIndex))
+	}
+
 	command := &Pop{
 		segment:   segment,
 		index:     index,
@@ -53,20 +57,19 @@ func (p *Pop) GetASMInstructions() ([]string, error) {
 		return []string{}, err
 	}
 
-	// TODO @5 can collide with pop temp command. To fix we need to find a safety memory address to hold pointer
 	return []string{
 		fmt.Sprintf("// pop %s %s", p.segment, p.index),
 		segmentLabel, // temp = segment + index
 		"D=A",
 		fmt.Sprintf("@%s", p.index),
 		"D=D+A",
-		"@5",
+		"@13",
 		"M=D",
 		"@SP", // @SP--
 		"M=M-1",
 		"A=M", // RAM[temp] = POP STACK
 		"D=M",
-		"@5",
+		"@13",
 		"A=M",
 		"M=D",
 	}, nil

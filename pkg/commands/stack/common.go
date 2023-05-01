@@ -8,7 +8,7 @@ import (
 const (
 	max15bitValue        = 36767
 	staticVariablesLimit = 249 // 16-255 memory registers
-	tempIndexLimit       = 7
+	tempMaxIndex         = 7
 	tempBaseAddress      = 5
 )
 

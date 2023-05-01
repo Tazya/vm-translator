@@ -25,8 +25,8 @@ func NewPush(segment, index, classname string) (commands.Command, error) {
 		return nil, errors.New(fmt.Sprintf("reach static varibales limit: %d", staticVariablesLimit))
 	}
 
-	if segment == "temp" && value > tempIndexLimit {
-		return nil, errors.New(fmt.Sprintf("reach temp varibales limit: %d", tempIndexLimit))
+	if segment == "temp" && value > tempMaxIndex {
+		return nil, errors.New(fmt.Sprintf("reach temp varibales limit: %d", tempMaxIndex))
 	}
 
 	pushCommand := &Push{

@@ -89,13 +89,13 @@ func TestPop_GetASMInstructions(t *testing.T) {
 				"D=A",
 				"@2",
 				"D=D+A",
-				"@5",
+				"@13",
 				"M=D",
 				"@SP", // @SP--
 				"M=M-1",
 				"A=M", // RAM[temp] = POP STACK
 				"D=M",
-				"@5",
+				"@13",
 				"A=M",
 				"M=D",
 			},
@@ -112,13 +112,13 @@ func TestPop_GetASMInstructions(t *testing.T) {
 				"D=A",
 				"@4",
 				"D=D+A",
-				"@5",
+				"@13",
 				"M=D",
 				"@SP", // @SP--
 				"M=M-1",
 				"A=M", // RAM[temp] = POP STACK
 				"D=M",
-				"@5",
+				"@13",
 				"A=M",
 				"M=D",
 			},
