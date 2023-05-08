@@ -29,6 +29,10 @@ func NewPop(segment, index, classname string) (commands.Command, error) {
 		return nil, errors.New(fmt.Sprintf("reach temp varibales limit: %d", tempMaxIndex))
 	}
 
+	if segment == "pointer" && (value != 0 && value != 1) {
+		return nil, errors.New(fmt.Sprintf("value for pointer must be 0 or 1"))
+	}
+
 	command := &Pop{
 		segment:   segment,
 		index:     index,
@@ -49,6 +53,10 @@ func (p *Pop) GetASMInstructions() ([]string, error) {
 
 	if p.segment == "temp" {
 		return p.getTempInstructions(), nil
+	}
+
+	if p.segment == "pointer" {
+		return p.getPointerInstructions()
 	}
 
 	segmentLabel, err := memory_segments.GetSegmentLabel(p.segment, p.index)
@@ -99,4 +107,22 @@ func (p *Pop) getTempInstructions() []string {
 		fmt.Sprintf("@%d", tempBaseAddress+intIndex),
 		"M=D",
 	}
+}
+
+func (p *Pop) getPointerInstructions() ([]string, error) {
+	label, err := memory_segments.GetSegmentLabel(p.segment, p.index)
+
+	if err != nil {
+		return []string{}, err
+	}
+
+	return []string{
+		fmt.Sprintf("// pop pointer %s", p.index),
+		"@SP", // @SP--
+		"M=M-1",
+		"A=M",
+		"D=M",
+		label,
+		"M=D",
+	}, nil
 }

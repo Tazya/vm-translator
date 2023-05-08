@@ -32,6 +32,12 @@ func TestNewPush(t *testing.T) {
 				classname: "cat",
 			},
 		},
+		{
+			name:    "push to incorrect pointer memory segment",
+			command: "push pointer 2",
+			want:    nil,
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -44,6 +50,10 @@ func TestNewPush(t *testing.T) {
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewPush() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if err != nil {
 				return
 			}
 
@@ -115,6 +125,42 @@ func TestPush_GetASMInstructions(t *testing.T) {
 			want: []string{
 				"// push static 3",
 				"@cat.3",
+				"D=M",
+				"@SP",
+				"A=M",
+				"M=D",
+				"@SP",
+				"M=M+1",
+			},
+		},
+		{
+			name: "Push from pointer 0 memory segment",
+			fields: fields{
+				segment: "pointer",
+				index:   "0",
+			},
+			classname: "cat",
+			want: []string{
+				"// push pointer 0",
+				"@THIS",
+				"D=M",
+				"@SP",
+				"A=M",
+				"M=D",
+				"@SP",
+				"M=M+1",
+			},
+		},
+		{
+			name: "Push from pointer 1 memory segment",
+			fields: fields{
+				segment: "pointer",
+				index:   "1",
+			},
+			classname: "cat",
+			want: []string{
+				"// push pointer 1",
+				"@THAT",
 				"D=M",
 				"@SP",
 				"A=M",

@@ -29,6 +29,10 @@ func NewPush(segment, index, classname string) (commands.Command, error) {
 		return nil, errors.New(fmt.Sprintf("reach temp varibales limit: %d", tempMaxIndex))
 	}
 
+	if segment == "pointer" && (value != 0 && value != 1) {
+		return nil, errors.New(fmt.Sprintf("value for pointer must be 0 or 1"))
+	}
+
 	pushCommand := &Push{
 		segment:   segment,
 		index:     index,
@@ -49,6 +53,10 @@ func (p *Push) GetASMInstructions() ([]string, error) {
 
 	if p.segment == "temp" {
 		return p.getTempInstructions(), nil
+	}
+
+	if p.segment == "pointer" {
+		return p.getPointerInstructions()
 	}
 
 	segmentLabel, err := memory_segments.GetSegmentLabel(p.segment, p.index)
@@ -110,4 +118,23 @@ func (p *Push) getTempInstructions() []string {
 		"@SP",
 		"M=M+1",
 	}
+}
+
+func (p *Push) getPointerInstructions() ([]string, error) {
+	label, err := memory_segments.GetSegmentLabel(p.segment, p.index)
+
+	if err != nil {
+		return []string{}, err
+	}
+
+	return []string{
+		fmt.Sprintf("// push pointer %s", p.index),
+		label,
+		"D=M",
+		"@SP",
+		"A=M",
+		"M=D",
+		"@SP",
+		"M=M+1",
+	}, nil
 }

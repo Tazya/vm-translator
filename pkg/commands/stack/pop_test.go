@@ -38,6 +38,12 @@ func TestNewPop(t *testing.T) {
 			want:    nil,
 			wantErr: true,
 		},
+		{
+			name:    "Pop to incorrect pointer memory segment",
+			command: "pop pointer 2",
+			want:    nil,
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -137,6 +143,40 @@ func TestPop_GetASMInstructions(t *testing.T) {
 				"@SP", // @SP--
 				"M=M-1",
 				"A=M",
+				"M=D",
+			},
+		},
+		{
+			name: "Pop to pointer 0 memory segment",
+			fields: fields{
+				segment: "pointer",
+				index:   "0",
+			},
+			classname: "Bird",
+			want: []string{
+				"// pop pointer 0",
+				"@SP", // @SP--
+				"M=M-1",
+				"A=M",
+				"D=M",
+				"@THIS",
+				"M=D",
+			},
+		},
+		{
+			name: "Pop to pointer 1 memory segment",
+			fields: fields{
+				segment: "pointer",
+				index:   "1",
+			},
+			classname: "Bird",
+			want: []string{
+				"// pop pointer 1",
+				"@SP", // @SP--
+				"M=M-1",
+				"A=M",
+				"D=M",
+				"@THAT",
 				"M=D",
 			},
 		},
