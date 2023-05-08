@@ -1,0 +1,4 @@
+// Pushes and compare two constants
+push constant 2
+push constant 2
+eq

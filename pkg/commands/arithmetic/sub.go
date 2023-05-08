@@ -5,16 +5,17 @@ import (
 	"github.com/tazya/vm-translator/pkg/labels"
 )
 
-type Add struct {
+// Sub two numbers from stack
+type Sub struct {
 }
 
-func NewAdd() commands.Command {
-	return &Add{}
+func NewSub() commands.Command {
+	return &Sub{}
 }
 
-func (a *Add) GetASMInstructions(labels *labels.Labels) ([]string, error) {
+func (a *Sub) GetASMInstructions(labels *labels.Labels) ([]string, error) {
 	return []string{
-		"// add",
+		"// sub",
 		"@SP",
 		"M=M-1",
 		"A=M",
@@ -22,7 +23,7 @@ func (a *Add) GetASMInstructions(labels *labels.Labels) ([]string, error) {
 		"@SP",
 		"M=M-1",
 		"A=M",
-		"M=D+M",
+		"M=M-D",
 		"@SP",
 		"M=M+1",
 	}, nil

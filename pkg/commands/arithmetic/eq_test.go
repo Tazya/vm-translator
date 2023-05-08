@@ -6,10 +6,10 @@ import (
 	"testing"
 )
 
-func TestAdd_GetASMInstructions(t *testing.T) {
+func TestEq_GetASMInstructions(t *testing.T) {
 	l := labels.NewLabels()
 	expected := []string{
-		"// add",
+		"// eq",
 		"@SP",
 		"M=M-1",
 		"A=M",
@@ -17,13 +17,25 @@ func TestAdd_GetASMInstructions(t *testing.T) {
 		"@SP",
 		"M=M-1",
 		"A=M",
-		"M=D+M",
+		"D=M-D",
+		"@LABELeq1TRUE",
+		"D;JEQ",
+		"@SP",
+		"A=M",
+		"M=0",
+		"@LABELeq1END",
+		"0;JMP",
+		"(LABELeq1TRUE)",
+		"@SP",
+		"A=M",
+		"M=-1",
+		"(LABELeq1END)",
 		"@SP",
 		"M=M+1",
 	}
 
-	t.Run("ADD command", func(t *testing.T) {
-		a := &Add{}
+	t.Run("Eq command", func(t *testing.T) {
+		a := &Eq{}
 		instructions, _ := a.GetASMInstructions(l)
 
 		if !reflect.DeepEqual(instructions, expected) {

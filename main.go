@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"github.com/tazya/vm-translator/pkg/labels"
 	"github.com/tazya/vm-translator/pkg/parser"
 	"os"
 	"path/filepath"
@@ -42,6 +43,7 @@ func main() {
 
 	defer f.Close()
 
+	l := labels.NewLabels()
 	inputFileScanner := bufio.NewScanner(inputFile)
 	inputFileScanner.Split(bufio.ScanLines)
 
@@ -62,7 +64,7 @@ func main() {
 			continue
 		}
 
-		instructions, err := command.GetASMInstructions()
+		instructions, err := command.GetASMInstructions(l)
 
 		if err != nil {
 			fmt.Println(fmt.Sprintf("Error. line:%d", codeLine), err.Error())

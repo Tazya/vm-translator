@@ -5,24 +5,21 @@ import (
 	"github.com/tazya/vm-translator/pkg/labels"
 )
 
-type Add struct {
+// Neg last number from stack
+type Neg struct {
 }
 
-func NewAdd() commands.Command {
-	return &Add{}
+func NewNeg() commands.Command {
+	return &Neg{}
 }
 
-func (a *Add) GetASMInstructions(labels *labels.Labels) ([]string, error) {
+func (a *Neg) GetASMInstructions(labels *labels.Labels) ([]string, error) {
 	return []string{
-		"// add",
+		"// neg",
 		"@SP",
 		"M=M-1",
 		"A=M",
-		"D=M",
-		"@SP",
-		"M=M-1",
-		"A=M",
-		"M=D+M",
+		"M=-M",
 		"@SP",
 		"M=M+1",
 	}, nil

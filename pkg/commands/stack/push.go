@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/tazya/vm-translator/pkg/commands"
+	"github.com/tazya/vm-translator/pkg/labels"
 	"github.com/tazya/vm-translator/pkg/memory_segments"
 	"strconv"
 )
@@ -42,7 +43,7 @@ func NewPush(segment, index, classname string) (commands.Command, error) {
 	return pushCommand, nil
 }
 
-func (p *Push) GetASMInstructions() ([]string, error) {
+func (p *Push) GetASMInstructions(labels *labels.Labels) ([]string, error) {
 	if p.segment == "constant" {
 		return p.getConstantInstructions(), nil
 	}

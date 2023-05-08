@@ -6,7 +6,10 @@ import (
 )
 
 var arithmeticCommands = map[string]func() commands.Command{
-	"add": NewAdd,
+	"add": NewAdd, // Addition
+	"sub": NewSub, // Subtraction
+	"neg": NewNeg, // Negation
+	"eq":  NewEq,  // Equals
 }
 
 func IsArithmeticCommand(commandName string) bool {

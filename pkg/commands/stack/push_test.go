@@ -1,6 +1,7 @@
 package stack
 
 import (
+	"github.com/tazya/vm-translator/pkg/labels"
 	"reflect"
 	"strings"
 	"testing"
@@ -65,6 +66,7 @@ func TestNewPush(t *testing.T) {
 }
 
 func TestPush_GetASMInstructions(t *testing.T) {
+	l := labels.NewLabels()
 	type fields struct {
 		segment string
 		index   string
@@ -187,7 +189,7 @@ func TestPush_GetASMInstructions(t *testing.T) {
 				index:     tt.fields.index,
 				classname: tt.classname,
 			}
-			got, err := p.GetASMInstructions()
+			got, err := p.GetASMInstructions(l)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetASMInstructions() error = %v, wantErr %v", err, tt.wantErr)
 				return

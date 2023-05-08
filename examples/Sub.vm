@@ -1,0 +1,4 @@
+// Pushes and subtract two constants.
+push constant 3
+push constant 2
+sub

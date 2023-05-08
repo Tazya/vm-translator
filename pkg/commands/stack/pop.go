@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/tazya/vm-translator/pkg/commands"
+	"github.com/tazya/vm-translator/pkg/labels"
 	"github.com/tazya/vm-translator/pkg/memory_segments"
 	"strconv"
 )
@@ -42,7 +43,7 @@ func NewPop(segment, index, classname string) (commands.Command, error) {
 	return command, nil
 }
 
-func (p *Pop) GetASMInstructions() ([]string, error) {
+func (p *Pop) GetASMInstructions(labels *labels.Labels) ([]string, error) {
 	if p.segment == "constant" {
 		return []string{}, errors.New("syntax error. can not write to constant")
 	}
