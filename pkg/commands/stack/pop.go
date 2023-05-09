@@ -87,11 +87,11 @@ func (p *Pop) GetASMInstructions(labels *labels.Labels) ([]string, error) {
 func (p *Pop) getStaticInstructions() []string {
 	return []string{
 		fmt.Sprintf("// pop static %s", p.index),
-		fmt.Sprintf("@%s.%s", p.classname, p.index),
-		"D=M",
 		"@SP", // @SP--
 		"M=M-1",
 		"A=M",
+		"D=M",
+		fmt.Sprintf("@%s.%s", p.classname, p.index),
 		"M=D",
 	}
 }

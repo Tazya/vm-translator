@@ -140,11 +140,11 @@ func TestPop_GetASMInstructions(t *testing.T) {
 			classname: "Bird",
 			want: []string{
 				"// pop static 1",
-				"@Bird.1",
-				"D=M",
 				"@SP", // @SP--
 				"M=M-1",
 				"A=M",
+				"D=M",
+				"@Bird.1",
 				"M=D",
 			},
 		},
