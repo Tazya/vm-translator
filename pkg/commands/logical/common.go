@@ -6,9 +6,12 @@ import (
 )
 
 var logicalCommands = map[string]func() commands.Command{
-	"eq": NewEq, // Equals
-	"gt": NewGt, // Greater than
-	"lt": NewLt, // Less than
+	"eq":  NewEq, // Equals
+	"gt":  NewGt, // Greater than
+	"lt":  NewLt, // Less than
+	"and": NewAnd,
+	"or":  NewOr,
+	"not": NewNot,
 }
 
 func IsLogicalCommand(commandName string) bool {
