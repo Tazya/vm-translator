@@ -1,4 +1,4 @@
-package arithmetic
+package logical
 
 import (
 	"github.com/tazya/vm-translator/pkg/labels"

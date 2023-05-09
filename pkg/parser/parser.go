@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/tazya/vm-translator/pkg/commands"
 	"github.com/tazya/vm-translator/pkg/commands/arithmetic"
+	"github.com/tazya/vm-translator/pkg/commands/logical"
 	"github.com/tazya/vm-translator/pkg/commands/stack"
 	"strings"
 )
@@ -25,6 +26,10 @@ func ParseLine(l, classname string) (commands.Command, error) {
 
 	if arithmetic.IsArithmeticCommand(commandName) {
 		return arithmetic.GetCommand(fields)
+	}
+
+	if logical.IsLogicalCommand(commandName) {
+		return logical.GetCommand(fields)
 	}
 
 	return nil, errors.New(fmt.Sprintf("Unknown command '%s'", l))

@@ -1,18 +1,18 @@
-package arithmetic
+package logical
 
 import (
 	"errors"
 	"github.com/tazya/vm-translator/pkg/commands"
 )
 
-var arithmeticCommands = map[string]func() commands.Command{
-	"add": NewAdd, // Addition
-	"sub": NewSub, // Subtraction
-	"neg": NewNeg, // Negation
+var logicalCommands = map[string]func() commands.Command{
+	"eq": NewEq, // Equals
+	"gt": NewGt, // Greater than
+	"lt": NewLt, // Less than
 }
 
-func IsArithmeticCommand(commandName string) bool {
-	_, isExist := arithmeticCommands[commandName]
+func IsLogicalCommand(commandName string) bool {
+	_, isExist := logicalCommands[commandName]
 
 	return isExist
 }
@@ -23,7 +23,7 @@ func GetCommand(fields []string) (commands.Command, error) {
 	}
 
 	commandName := fields[0]
-	commandConstructor, isExist := arithmeticCommands[commandName]
+	commandConstructor, isExist := logicalCommands[commandName]
 
 	if !isExist {
 		return nil, errors.New("command not found")
