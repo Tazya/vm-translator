@@ -94,7 +94,7 @@ func TestPop_GetASMInstructions(t *testing.T) {
 			want: []string{
 				"// pop local 2",
 				"@LCL", // temp = local + 2
-				"D=A",
+				"D=M",
 				"@2",
 				"D=D+A",
 				"@13",
@@ -117,7 +117,7 @@ func TestPop_GetASMInstructions(t *testing.T) {
 			want: []string{
 				"// pop argument 4",
 				"@ARG", // temp = local + 2
-				"D=A",
+				"D=M",
 				"@4",
 				"D=D+A",
 				"@13",

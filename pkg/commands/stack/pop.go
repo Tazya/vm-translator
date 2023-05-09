@@ -69,7 +69,7 @@ func (p *Pop) GetASMInstructions(labels *labels.Labels) ([]string, error) {
 	return []string{
 		fmt.Sprintf("// pop %s %s", p.segment, p.index),
 		segmentLabel, // temp = segment + index
-		"D=A",
+		"D=M",
 		fmt.Sprintf("@%s", p.index),
 		"D=D+A",
 		"@13",
